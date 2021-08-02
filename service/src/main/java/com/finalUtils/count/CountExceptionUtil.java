@@ -1,4 +1,4 @@
-package com.utils.count;
+package com.finalUtils.count;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -16,8 +16,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CountExceptionUtil {
 
     private static Map<String, AtomicInteger> exceptionCountMap = new ConcurrentHashMap<>();
-
-
 
     /**
      * 累计一定次数后报错
@@ -39,7 +37,7 @@ public class CountExceptionUtil {
         int i=atomicInteger.incrementAndGet();
         //超过设置的最大报错次数时报错
         if (i > maxCount) {
-           log.error("出现"+key + "超过最大累计次数，报错");
+           log.info("出现"+key + "超过最大累计次数，报错");
             atomicInteger.set(0);
             log.info(exceptionCountMap);}
          else {
