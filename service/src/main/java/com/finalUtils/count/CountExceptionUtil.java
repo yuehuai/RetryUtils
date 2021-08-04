@@ -26,7 +26,8 @@ public class CountExceptionUtil {
      */
     public static void countException(int maxCount, String methodName, Throwable e) {
         //拼接“方法名+(异常)”分类进行统计
-        String key = methodName + '(' + e.getMessage() + ')';
+        String message= e.getClass().getSimpleName();
+        String key = methodName + '(' + message + ')';
         AtomicInteger atomicInteger  = exceptionCountMap.get(key);
         //Map中没有存储该异常时，初始化为0
         if (atomicInteger == null) {

@@ -1,20 +1,18 @@
 package com.controller;
 
 import com.aopdemo.LiuTest;
-import com.entity.student;
 import com.service.StudentService;
 import com.utils.count.CountExceptionUtil;
 import com.utils.count.annotation.CountException;
-import com.utils.retry.RetryUtil;
 import com.utils.oldretry.annotation.Retry;
+import com.utils.retry.RetryUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * controller
@@ -26,15 +24,16 @@ import java.util.List;
 @RestController
 @RequestMapping("service/student")
 public class StudentController {
+    @Value("${count}")
+    int count;
+    @Value("${retry.maxCount}")
+    int maxCount;
+    @Value("${retry.sleepTime}")
+    int sleepTime;
+
     @Autowired
     private StudentService studentService;
 
-    @ApiOperation("查询全部学生")
-    @GetMapping("getAllStudent")
-    public List<student> getAllStudent() {
-
-        return studentService.selectAll();
-    }
 
     @ApiOperation("自定义注解测试")
     @LiuTest
@@ -60,8 +59,9 @@ public class StudentController {
     @GetMapping("test2")
     public void test2() {
         try {
+            log.info("当前最大次数："+maxCount+"当前休眠时间："+sleepTime);
             // 最大重试次数,延迟重试时间
-             RetryUtil.retry(6, 1000,
+             RetryUtil.retry(maxCount, sleepTime,
                     // 调用服务
                     () -> {
                         System.out.println(1/0);
